@@ -1,0 +1,11 @@
+conda create -n yolo5 python==3.8.5
+conda activate yolo5
+conda install keras==2.6
+conda install tensorflow-gpu==2.6
+conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
+pip install opencv-python
+conda install pandas
+conda install chardet
+conda install tqdm
+pip install matplotlib
+pip install seaborn
