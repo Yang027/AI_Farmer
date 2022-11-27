@@ -431,7 +431,8 @@ def job(ghid,payloads,mqttclient):#greenhouse_id,control(e.g:light,fan),(HH:mm)<
 def checktime(time1,time2):#return true if time exceed two hours
     return True if abs(time1-time2)>120 else False
 
-def getCustomV(Greenhouse_id,mysql,mqttclient):#greenhouseid list,mysql object
+#取得使用者自定義時間
+def getCustomV(Greenhouse_id,mysql,mqttclient):#greenhouseid,mysql object，mqtt object
      #取得user排程的時間   
     #for i in Greenhouse_id:
     sqlstr=f"SELECT fantime,hottime,bumptime,luxtime FROM `greenhouse_customT` WHERE `greenhouse_id`='{Greenhouse_id}'"
