@@ -30,21 +30,21 @@ STUDY_UP={
 }
 def get_mid_pos(box,depth_data,randnum):
     distance_list = []
-    mid_pos = [(box[0] + box[2])//2, (box[1] + box[3])//2] #确定索引深度的中心像素位置
-    min_val = min(abs(box[2] - box[0]), abs(box[3] - box[1])) #确定深度搜索范围
+    mid_pos = [(box[0] + box[2])//2, (box[1] + box[3])//2] #確定索引深度的中心像素位置
+    min_val = min(abs(box[2] - box[0]), abs(box[3] - box[1])) #確定深度搜索範圍
     for i in range(randnum):
         bias = random.randint(-min_val//4, min_val//4)
         dist = depth_data[int(mid_pos[1] + bias), int(mid_pos[0] + bias)]
         if dist:
             distance_list.append(dist)
     distance_list = np.array(distance_list)
-    distance_list = np.sort(distance_list)[randnum//2-randnum//4:randnum//2+randnum//4] #冒泡排序+中值滤波
+    distance_list = np.sort(distance_list)[randnum//2-randnum//4:randnum//2+randnum//4] # 冒泡排序+中值濾波
     return np.mean(distance_list)
 
 def get_center_distance(mature_boxs):
     distance_boxs = []
     for box in mature_boxs:
-        box_center = [int(box[0] + box[2]) // 2, int(box[1])]  # 确定索引深度的中心像素位置
+        box_center = [int(box[0] + box[2]) // 2, int(box[1])]  # 抓出物體中心
         box_gap = box_center - FRAME_CENTER
         box = box.tolist()
         box.append(math.hypot(box_gap[0],box_gap[1]))
@@ -262,9 +262,9 @@ if __name__ == "__main__":
     cfg.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 60)
     cfg.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 60)
 
-    # 设定需要对齐的方式（这里是深度对齐彩色，彩色图不变，深度图变换）
+    # 設定需要對齊的方式（深度對彩色，彩色不變，深度變）
     align_to = rs.stream.color
-    # 设定需要对齐的方式（这里是彩色对齐深度，深度图不变，彩色图变换）
+    # 設定需要對齊的方式（彩色對深度，深度不變，彩色變）
     # align_to = rs.stream.depth
 
     alignedFs = rs.align(align_to)
