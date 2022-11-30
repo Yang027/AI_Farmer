@@ -59,15 +59,15 @@ Growth_cycle=['幼苗期','成長期','開花期','結果期']
 Plant='tomato'
 PlantCir=''#周期
 #mqtt param 
-Server="192.192.156.30"
+Server="mqttserver"
 Port=1883
 Alivetime=60
-MQTTUsername='yang'
-MQTTPassword='1234'
+MQTTUsername='mqttusr'
+MQTTPassword='mqttpwd'
 #SQL VALUE 
-Db='aifarmer'
-DBUsername='aifarmer'
-DBPassword='1234'
+Db='dbname'
+DBUsername='db'
+DBPassword='pwd
 DBTableName='plant'      
 #初始化溫室預設環境資料
 #除了co2和lux，其他單位皆以0-100來計算
