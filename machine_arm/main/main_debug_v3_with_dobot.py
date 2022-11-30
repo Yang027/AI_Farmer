@@ -28,6 +28,7 @@ STUDY_UP={
     'Z': 80,
     'R': 90
 }
+# 抓取距離的method
 def get_mid_pos(box,depth_data,randnum):
     distance_list = []
     mid_pos = [(box[0] + box[2])//2, (box[1] + box[3])//2] #確定索引深度的中心像素位置
@@ -40,7 +41,7 @@ def get_mid_pos(box,depth_data,randnum):
     distance_list = np.array(distance_list)
     distance_list = np.sort(distance_list)[randnum//2-randnum//4:randnum//2+randnum//4] # 冒泡排序+中值濾波
     return np.mean(distance_list)
-
+# 抓取物體的中心
 def get_center_distance(mature_boxs):
     distance_boxs = []
     for box in mature_boxs:
@@ -50,7 +51,7 @@ def get_center_distance(mature_boxs):
         box.append(math.hypot(box_gap[0],box_gap[1]))
         distance_boxs.append(box)
     return np.array(distance_boxs)
-
+# 抓取離中心最近的物體
 def get_center_distance_near(mature_boxs):
     length = float('inf')
     index=0
@@ -59,7 +60,7 @@ def get_center_distance_near(mature_boxs):
             length = float(mature_boxs[i,-1])
             index=i
     return index
-
+#顯示畫面
 def dectshow(org_img, boxs):
     img = org_img.copy()
     try:
@@ -80,7 +81,7 @@ def dectshow(org_img, boxs):
             return
     except Exception as ex:
         print(ex)
-
+# 手臂滑軌移動
 def Rail(pipeline,alignedFs,state,api,L_bias):
     if (state == dType.DobotConnect.DobotConnect_NoError):
         dType.SetQueuedCmdClear(api)
@@ -97,6 +98,7 @@ def Rail(pipeline,alignedFs,state,api,L_bias):
             dType.dSleep(100)
         dType.SetQueuedCmdStopExec(api)
         # return L_ori
+# 執行手臂點位移動
 def arm_Z(pipeline,alignedFs,state,api,Z_bias,X_bias):
     camera(pipeline,alignedFs)
     if (state == dType.DobotConnect.DobotConnect_NoError):
@@ -123,8 +125,8 @@ def arm_Z(pipeline,alignedFs,state,api,Z_bias,X_bias):
             camera(pipeline,alignedFs)
             dType.dSleep(100)
         dType.SetQueuedCmdStopExec(api)
-
-def camera(pipeline,alignedFs):
+#抓取相機畫面參數
+def camera(pipeline,alignedFs):  
     fs = pipeline.wait_for_frames()
     aligned_frames = alignedFs.process(fs)
 
@@ -253,11 +255,12 @@ def run(pipeline,alignedFs,state,api,model):
         # Stop streaming
         pipeline.stop()
 if __name__ == "__main__":
+    # 讀取yolov5模型檔  
     model = torch.hub.load('ultralytics/yolov5', 'custom', path='model/tomato.pt')
     model.conf = 0.5
     # Configure depth and color streams
     pipeline = rs.pipeline()
-
+    #設定 camera 參數
     cfg = rs.config()
     cfg.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 60)
     cfg.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 60)
@@ -266,7 +269,7 @@ if __name__ == "__main__":
     align_to = rs.stream.color
     # 設定需要對齊的方式（彩色對深度，深度不變，彩色變）
     # align_to = rs.stream.depth
-
+    
     alignedFs = rs.align(align_to)
 
     pipeline.start(cfg)
@@ -277,15 +280,15 @@ if __name__ == "__main__":
     state = dType.ConnectDobot(api, "", 115200)[0]
     print("Connect status:", CON_STR[state])
     if (state == dType.DobotConnect.DobotConnect_NoError):
-        dType.SetQueuedCmdClear(api)
-        dType.SetHOMEParams(api, HOME['X'], HOME['Y'], HOME['Z'], HOME['R'], isQueued=1)
-        wait_move = dType.SetHOMECmd(api, 0, isQueued=1)[0]
-        dType.SetQueuedCmdStartExec(api)
+        dType.SetQueuedCmdClear(api) 
+        dType.SetHOMEParams(api, HOME['X'], HOME['Y'], HOME['Z'], HOME['R'], isQueued=1) # 設定HOME位置
+        wait_move = dType.SetHOMECmd(api, 0, isQueued=1)[0] # 執行校正
+        dType.SetQueuedCmdStartExec(api) # 執行住列
         while wait_move > dType.GetQueuedCmdCurrentIndex(api)[0]:
             dType.dSleep(100)
         dType.SetQueuedCmdStopExec(api)
-        run(pipeline,alignedFs,state,api,model)
-        dType.DisconnectDobot(api)
+        run(pipeline,alignedFs,state,api,model) # 主程式
+        dType.DisconnectDobot(api) #斷開連線
         print('exit')
         cv2.destroyAllWindows()
 
