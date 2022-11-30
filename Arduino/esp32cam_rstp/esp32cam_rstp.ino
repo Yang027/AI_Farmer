@@ -5,8 +5,8 @@
 #include "SimStreamer.h"
 #include "OV2640Streamer.h"
 #include "CRtspSession.h"
-char *ssid = "aifarmer";        // Put your SSID here
-char *password = "12345678";      // Put your PASSWORD here
+char *ssid = "ssid";        // Put your SSID here
+char *password = "password";      // Put your PASSWORD here
 WebServer server(80);
 WiFiServer rtspServer(554);
 OV2640 cam;
