@@ -132,9 +132,9 @@ const char* Greenhouse_id = "ai_farmer";
 long Time_Send = 20000; // ms
 //-------------網路參數宣告和設定--------------------
 #define MSG_BUFFER_SIZE  (100)                                   //publish topic buffer length
-char WIFI_AP[] =   "aifarmer";                                    //AP ssid
-char WIFI_PASSWORD[] =  "12345678";                              //AP PASSWORD
-char MqttServer[] = "192.192.156.30";                            //MQTT Broker IP address
+char WIFI_AP[] =   "ssid";                                    //AP ssid
+char WIFI_PASSWORD[] =  "password";                              //AP PASSWORD
+char MqttServer[] = "mqttserver"; //mqtthost                           //MQTT Broker IP address
 SoftwareSerial soft(3, 2); //  TX, RX                            //ESP8266  TX, RX
 
 // 初始化乙太網客戶端物件 -- WiFiEspClient.h
