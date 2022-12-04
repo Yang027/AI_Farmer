@@ -700,7 +700,8 @@ if (isset($_GET["currgh"])) {
 	var config = inichart('linedata');
 	var line = new Morris.Line(config);
 	var container_;
-
+        //初始化圖表
+	//initialize chart
 	function inichart(_element) {
 		option = {
 			element: _element,
@@ -722,7 +723,7 @@ if (isset($_GET["currgh"])) {
 		};
 		return option;
 	}
-
+         //connect mqtt,and subscribe the topic,to get and update data on the website
 	function mqttconnect() {
 		const clientId = 'mqttjs_' + Math.random().toString(16).substr(2, 8)
 		const host = 'wss://ai.shu.edu.tw:8883';
@@ -743,18 +744,15 @@ if (isset($_GET["currgh"])) {
 				retain: false
 			},
 		}
-		//console.log('Connecting mqtt client')
 		client = mqtt.connect(host, options)
 		if (nowgh != null) {
-			histdata('co2');
+			histdata('co2');//預設二氧化碳為歷史數據選項（顯示在chart上）
 		}
 		client.on('connect', () => {
-			//console.log('connected.');
 			if (typeof nowgh !== 'undefined') {
 				client.subscribe(nowgh + '/sensor', {
 					qos: 2
 				})
-				//	console.log('subscribe greehouse:' + (nowgh + '/sensor'))
 			}
 			client.on("message", function(topic, payload) {
 				//	console.log(payload);
@@ -766,7 +764,6 @@ if (isset($_GET["currgh"])) {
 				$('h4.temp').text(arr[0] + '°C');
 				if (localStorage.getItem('selectsensor') != null) {
 					var sensor = localStorage.getItem('selectsensor');
-					//		console.log(sensor);
 					var dd = 0;
 					if (sensor == 'temp')
 						dd = arr[0]
@@ -786,7 +783,6 @@ if (isset($_GET["currgh"])) {
 					})
 					line.setData(updateData(container_));
 				}
-				//	console.log('subscribe greehouse:' + (nowgh + '/sensor'))
 			});
 		});
 	}
@@ -819,10 +815,8 @@ if (isset($_GET["currgh"])) {
 		}
 		return JSON.stringify(obj);
 	}
-	//var fill = Morris.Area(inichart('fill'));
-	// https://blog.reh.tw/archives/662
-	//https://blog.csdn.net/mafan121/article/details/50832873
 
+	//取得選取的sensor歷史數據
 	function histdata(sensor) {
 		var sen = '';
 		var txt = '';
