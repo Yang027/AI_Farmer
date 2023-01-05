@@ -67,7 +67,7 @@ MQTTPassword='mqttpwd'
 #SQL VALUE 
 Db='dbname'
 DBUsername='db'
-DBPassword='pwd
+DBPassword='pwd'
 DBTableName='plant'      
 #初始化溫室預設環境資料
 #除了co2和lux，其他單位皆以0-100來計算
